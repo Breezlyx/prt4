@@ -1,0 +1,308 @@
+Imports System.IO
+Imports System.Net.Sockets.Socket
+Imports System
+Imports System.Text
+Imports System.Net
+Imports System.Net.Sockets
+Imports Microsoft.VisualBasic
+Imports System.Runtime.InteropServices
+Public Class Form1
+    Inherits System.Windows.Forms.Form
+    Public receivingUdpClient As UdpClient
+    Public RemoteIpEndPoint As New System.Net.IPEndPoint(System.Net.IPAddress.Any, 0)
+    Public ThreadReceive As System.Threading.Thread
+    Dim SocketNO As Integer
+
+    Dim idPrt As String
+    Dim GLOIP As IPAddress
+    Dim NOVIP As IPAddress
+    Dim GLOINTPORT As Integer
+    Dim NOVINTPORT As Integer
+    Dim bytCommand As Byte() = New Byte() {}
+    Dim udpClient As New UdpClient
+
+
+#Region " Windows Form Designer generated code "
+
+    Public Sub New()
+        MyBase.New()
+
+        'This call is required by the Windows Form Designer.
+        InitializeComponent()
+
+        'Add any initialization after the InitializeComponent() call
+
+    End Sub
+
+    'Form overrides dispose to clean up the component list.
+    Protected Overloads Overrides Sub Dispose(ByVal disposing As Boolean)
+        If disposing Then
+            If Not (components Is Nothing) Then
+                components.Dispose()
+            End If
+        End If
+        MyBase.Dispose(disposing)
+    End Sub
+
+    'Required by the Windows Form Designer
+    Private components As System.ComponentModel.IContainer
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents Clear As System.Windows.Forms.Button
+    Friend WithEvents txtSocket As System.Windows.Forms.TextBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents txtIP As System.Windows.Forms.TextBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents chkBit As System.Windows.Forms.CheckBox
+    Friend WithEvents Button2 As System.Windows.Forms.Button
+    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Clear = New System.Windows.Forms.Button()
+        Me.txtSocket = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtIP = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.chkBit = New System.Windows.Forms.CheckBox()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.SuspendLayout()
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Enabled = False
+        Me.TextBox1.Location = New System.Drawing.Point(0, 37)
+        Me.TextBox1.Multiline = True
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.ReadOnly = True
+        Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.TextBox1.Size = New System.Drawing.Size(854, 406)
+        Me.TextBox1.TabIndex = 0
+        '
+        'Clear
+        '
+        Me.Clear.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Clear.Location = New System.Drawing.Point(0, 441)
+        Me.Clear.Name = "Clear"
+        Me.Clear.Size = New System.Drawing.Size(854, 37)
+        Me.Clear.TabIndex = 1
+        Me.Clear.Text = "Limpiar"
+        '
+        'txtSocket
+        '
+        Me.txtSocket.Location = New System.Drawing.Point(163, 7)
+        Me.txtSocket.Name = "txtSocket"
+        Me.txtSocket.Size = New System.Drawing.Size(96, 22)
+        Me.txtSocket.TabIndex = 2
+        Me.txtSocket.Text = "8485"
+        '
+        'Label1
+        '
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(0, 9)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(154, 19)
+        Me.Label1.TabIndex = 3
+        Me.Label1.Text = "Puerto N°"
+        '
+        'txtIP
+        '
+        Me.txtIP.Location = New System.Drawing.Point(595, 7)
+        Me.txtIP.Name = "txtIP"
+        Me.txtIP.ReadOnly = True
+        Me.txtIP.Size = New System.Drawing.Size(115, 22)
+        Me.txtIP.TabIndex = 5
+        '
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(422, 9)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(154, 19)
+        Me.Label2.TabIndex = 6
+        Me.Label2.Text = "IP Receptora"
+        '
+        'Button1
+        '
+        Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.Location = New System.Drawing.Point(269, 5)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(57, 27)
+        Me.Button1.TabIndex = 7
+        Me.Button1.Text = "Inicio"
+        '
+        'Label3
+        '
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(586, 480)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(268, 18)
+        Me.Label3.TabIndex = 8
+        Me.Label3.Text = "Created by Kumudu Wickramasinha Gunasekara"
+        '
+        'chkBit
+        '
+        Me.chkBit.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkBit.Location = New System.Drawing.Point(730, 9)
+        Me.chkBit.Name = "chkBit"
+        Me.chkBit.Size = New System.Drawing.Size(105, 19)
+        Me.chkBit.TabIndex = 9
+        Me.chkBit.Text = "Bit Detail"
+        '
+        'Button2
+        '
+        Me.Button2.Enabled = False
+        Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button2.Location = New System.Drawing.Point(346, 5)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(57, 27)
+        Me.Button2.TabIndex = 10
+        Me.Button2.Text = "Alto"
+        '
+        'Form1
+        '
+        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+        Me.ClientSize = New System.Drawing.Size(712, 430)
+        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.chkBit)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.txtIP)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.txtSocket)
+        Me.Controls.Add(Me.Clear)
+        Me.Controls.Add(Me.TextBox1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Name = "Form1"
+        Me.Text = "UDP Receive"
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
+
+    End Sub
+
+#End Region
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        chkBit.Checked = True
+        Button1_Click(sender, e)
+    End Sub
+    Public Sub ReceiveMessages()
+        Dim pRet As Integer
+        Try
+            Dim receiveBytes As [Byte]() = receivingUdpClient.Receive(RemoteIpEndPoint)
+            txtIP.Text = RemoteIpEndPoint.Address.ToString
+
+            TextBox1.Text = TextBox1.Text & RemoteIpEndPoint.Port.ToString
+            Dim BitDet As BitArray
+            BitDet = New BitArray(receiveBytes)
+
+            Dim strReturnData As String = System.Text.Encoding.Unicode.GetString(receiveBytes)
+
+            TextBox1.Text = TextBox1.Text & Encoding.ASCII.GetChars(receiveBytes)
+            TextBox1.Text = TextBox1.Text & vbCrLf
+
+            'SEPARAR CADENA, ID:IP
+
+            idPrt = Encoding.ASCII.GetString(receiveBytes).Substring(0, 1)
+            GLOIP = RemoteIpEndPoint.Address
+            GLOINTPORT = RemoteIpEndPoint.Port
+
+            'ENVIAR CADENA A NOVAXIS
+            If RemoteIpEndPoint.Address.ToString <> "190.196.60.193" Then
+
+
+            End If
+
+            NOVIP = System.Net.IPAddress.Parse("190.196.60.193")
+
+            udpClient.Connect(NOVIP, NOVINTPORT)
+            'bytCommand = Encoding.ASCII.GetBytes(readText)
+            pRet = udpClient.Send(receiveBytes, receiveBytes.Length)
+
+            TextBox1.Text = TextBox1.Text & idPrt
+            TextBox1.Text = TextBox1.Text & vbCrLf
+            TextBox1.Text = TextBox1.Text & GLOIP.ToString
+            TextBox1.Text = TextBox1.Text & vbCrLf
+
+            'CONSULTAR ARCHIVO CORRESPONDIENTE A ID, RECUPERAR TIEMPO
+            Dim path As String = System.AppDomain.CurrentDomain.BaseDirectory() & idPrt & ".txt"
+            Dim readText As String = File.ReadAllText(path)
+
+            TextBox1.Text = TextBox1.Text & path
+            TextBox1.Text = TextBox1.Text & vbCrLf
+            TextBox1.Text = TextBox1.Text & readText
+            TextBox1.Text = TextBox1.Text & vbCrLf
+
+            'ENVIAR TIEMPO
+
+            udpClient.Connect(GLOIP, GLOINTPORT)
+            bytCommand = Encoding.ASCII.GetBytes(readText)
+            pRet = udpClient.Send(bytCommand, bytCommand.Length)
+
+            NewInitialize()
+        Catch e As Exception
+            Console.WriteLine(e.Message)
+        End Try
+    End Sub
+    Public Sub NewInitialize()
+        Console.WriteLine("Thread *Thread Receive* reinitialized")
+        ThreadReceive = New System.Threading.Thread(AddressOf ReceiveMessages)
+        ThreadReceive.Start()
+    End Sub
+
+    Private Sub Clear_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Clear.Click
+        TextBox1.Text = ""
+    End Sub
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Try
+            SocketNO = txtSocket.Text
+            receivingUdpClient = New System.Net.Sockets.UdpClient(SocketNO)
+            ThreadReceive = New System.Threading.Thread(AddressOf ReceiveMessages)
+            ThreadReceive.Start()
+            TextBox1.Enabled = True
+            Button2.Enabled = True
+            Button1.Enabled = False
+            txtSocket.ReadOnly = True
+        Catch x As Exception
+            Console.WriteLine(x.Message)
+            TextBox1.Text = TextBox1.Text & vbCrLf & x.Message
+        End Try
+    End Sub
+
+    Private Sub Form1_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+        Try
+            receivingUdpClient.Close()
+            udpClient.Close()
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        Try
+            ThreadReceive.Abort()
+            receivingUdpClient.Close()
+            udpClient.Close()
+            TextBox1.Text = ""
+            TextBox1.Enabled = False
+            Button2.Enabled = False
+            Button1.Enabled = True
+            txtIP.Text = ""
+            txtSocket.ReadOnly = False
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub TextBox1_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextBox1.TextChanged
+
+    End Sub
+End Class

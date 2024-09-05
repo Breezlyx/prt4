@@ -1,0 +1,145 @@
+body {
+    background-color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+}
+
+#container {
+    max-width: 1200px;
+    width: 100%; /* Asegura que el container use el 100% del ancho disponible */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow-y: auto;
+    max-height: 80vh; 
+}
+
+/* Grid responsivo */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Estilo de cada ítem del grid */
+.grid-item {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.form-login-heading, .board, .login-wrap {
+    margin-bottom: 10px;
+    padding-inline: 10px;
+}
+
+.top-bar {
+    position: fixed;
+    width: 100%;
+    height: 30px;
+    background-color: #16abdd;
+    top: 0;
+    z-index: 2;
+}
+
+.bottom-bar {
+    position: fixed;
+    width: 100%;
+    height: 30px;
+    background-color: #16abdd;
+    bottom: 0;
+    z-index: 2;
+}
+
+.imagen {
+    margin-top: 40px; /* Separación de la imagen teniendo en cuenta la barra y la separación deseada */
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1; /* Asegura que la imagen esté encima de la barra */
+}
+
+.imagen img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.userdata {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+.actual {
+    margin-bottom: 30px;
+}
+
+.form-login-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+.board {
+    font-size: 48px;
+    color: red;
+    background-color: black;
+    margin-bottom: 20px;
+    margin-inline: auto;
+    max-width: 200px;
+}
+
+.login-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-control.tiempo {
+    width: 50px;
+    margin: 0 5px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.tiempo {
+    font-size: 24px;
+    margin: 0 5px;
+}
+
+.btn-theme {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-theme:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 20px;
+}
